@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SearchFlightsByName, CrewFlight } from "../services/api";
+import { searchFlightsByName, CrewFlight } from "../services/api";
 import Flight from "../components/Flight";
 import { Search } from "lucide-react";
 
@@ -25,7 +25,7 @@ function CrewPage() {
             <button
               type="button"
               onClick={async () => {
-                const flightsByName = await SearchFlightsByName(crewName);
+                const flightsByName = await searchFlightsByName(crewName);
                 setFlights(flightsByName);
               }}
               className="absolute inset-y-0 right-0 px-4 py-2 border border-transparent text-sm font-medium rounded-r-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"

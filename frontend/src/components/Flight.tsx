@@ -7,7 +7,7 @@ function Flight({ flights }: { flights: CrewFlight[] }) {
       <div>
         <div className="border-t border-gray-200">
           <ul className="divide-y divide-gray-200">
-            {(flights ?? []).map((flight) => (
+            {flights.map((flight) => (
               <li key={flight.flightId} className="px-4 py-4 sm:px-6">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">

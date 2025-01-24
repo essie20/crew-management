@@ -11,7 +11,7 @@ export interface CrewFlight {
   }[];
 }
 
-export async function SearchFlightsByName(name: string): Promise<CrewFlight[]> {
+export async function searchFlightsByName(name: string): Promise<CrewFlight[]> {
   try {
     const response = await axios.get(
       `${import.meta.env.VITE_BACKEND_URL}/crew-member`,
