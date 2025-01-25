@@ -73,11 +73,60 @@ app.get("/crew-member", async (req, res) => {
         }
 
         flight.crewMembers.push({
-          crewMemberId: current.crew_member_id,
-          crewMemberName: current.crew_member_name,
-          crewMemberRole: current.crew_member_role,
+          id: current.crew_member_id,
+          name: current.crew_member_name,
+          role: current.crew_member_role,
         });
 
+        return acc;
+      },
+      []
+    );
+
+    res.json(transformedData);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).json({ error: "Failed to fetch data from the database." });
+  }
+});
+
+app.get("/flights-with-crew", async (req, res) => {
+  try {
+    const flightsWithCrewResult = await turso.execute(
+      `SELECT 
+          flights.id AS flight_id,
+          flights.flight_number,
+          flights.departure_time,
+          crew_members.id AS crew_member_id,
+          crew_members.name AS crew_member_name,
+          crew_members.role AS crew_member_role
+        FROM flights
+        LEFT JOIN flight_crew ON flights.id = flight_crew.flight_id
+        LEFT JOIN crew_members ON crew_members.id = flight_crew.crew_member_id
+      `
+    );
+    console.log(flightsWithCrewResult);
+    const transformedData = flightsWithCrewResult.rows.reduce(
+      (acc, current) => {
+        let flight = acc.find(
+          (flight) => flight.flightId === current.flight_id
+        );
+        if (!flight) {
+          flight = {
+            flightId: current.flight_id,
+            flightNo: current.flight_number,
+            departureTime: current.departure_time,
+            crewMembers: [],
+          };
+          acc.push(flight);
+        }
+        if (current.crew_member_id) {
+          flight.crewMembers.push({
+            id: current.crew_member_id,
+            name: current.crew_member_name,
+            role: current.crew_member_role,
+          });
+        }
         return acc;
       },
       []
@@ -143,7 +192,7 @@ app.post("/flight", async (req, res) => {
 
     res.status(201).json({
       message: "Flight added successfully!",
-      member: { id: parseInt(result.lastInsertRowid), flightNo, departureTime },
+      flight: { id: parseInt(result.lastInsertRowid), flightNo, departureTime },
     });
   } catch (error) {
     console.error("Error inserting flight:", error);
