@@ -1,7 +1,6 @@
 import { CrewMember } from "../types/CrewMember.ts";
 import { DeleteButton } from "./DeleteButton.tsx";
 import { deleteCrewMember } from "../services/api.ts";
-import { useState } from "react";
 import { User } from "lucide-react";
 
 function CrewMemberList({
@@ -9,11 +8,15 @@ function CrewMemberList({
   hideDelete,
   fetchAllData,
   openModal,
+  onDragStart,
+  onDragEnd,
 }: {
   crewMembers: CrewMember[];
   hideDelete: boolean;
   fetchAllData: () => void;
   openModal: () => void;
+  onDragStart: (cm: CrewMember) => void;
+  onDragEnd: (cm?: CrewMember) => void;
 }) {
   async function handleDeleteCrewMember(id: number) {
     await deleteCrewMember(id);
@@ -25,7 +28,10 @@ function CrewMemberList({
         {crewMembers.map((crewMember: CrewMember) => (
           <li
             key={crewMember.id}
-            className="flex items-center space-x-3 text-sm w-full justify-between rounded-full bg-white p-3 m-3"
+            draggable
+            onDragStart={() => onDragStart(crewMember)}
+            onDragEnd={() => onDragEnd()}
+            className="flex items-center space-x-3 text-sm w-full justify-between rounded-full bg-white p-3 m-3 cursor-move" //cursor-move added
           >
             <span>
               <span className="inline-flex items-center text-center px-2.5 py-0.5 rounded-full text-xs font-sm capitalize bg-blue-100 text-blue-800 border border-blue-300">

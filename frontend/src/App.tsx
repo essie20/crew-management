@@ -3,7 +3,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import "./App.css";
 import CrewPage from "./routes/CrewPage";
 import ManagerPage from "./routes/ManagerPage";
-import { Plane, Users } from "lucide-react";
+import { Cloudy, Handshake, Plane, Users } from "lucide-react";
 
 function App() {
   return (
@@ -11,7 +11,10 @@ function App() {
       <div>
         <Router>
           <div className="min-h-screen bg-gradient-to-b from-slate-50 to-blue-300">
-            <nav className="shadow-sm bg-white">
+            <Plane className="h-200 w-200 absolute z-0 m-10 opacity-50  [stroke-width: 1] stroke-white" />
+            <Cloudy className="h-50 w-50 absolute right-20 top-70 z-0 m-10 opacity-50  [stroke-width: 1] stroke-white" />
+            <Handshake className="h-50 w-50 absolute bottom-10 left-260 z-0 m-10 opacity-50  [stroke-width: 1] stroke-white" />
+            <nav className="relative shadow-sm bg-white z-20">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
                 <div className="flex justify-between h-16 ">
                   <div className="flex ">
@@ -42,7 +45,7 @@ function App() {
               </div>
             </nav>
 
-            <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 z-20 relative ">
               <Routes>
                 <Route path="/" element={<CrewPage />} />
                 <Route path="/management" element={<ManagerPage />} />

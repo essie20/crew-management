@@ -4,6 +4,8 @@ import { format } from "date-fns";
 import { DeleteButton } from "./DeleteButton.tsx";
 import { deleteFlight, unassignCrewMember } from "../services/api.ts";
 import { Plane } from "lucide-react";
+import { DragEndEvent } from "@dnd-kit/core";
+import RandomAssignment from "../components/RandomAssignment.tsx";
 
 function FlightResult({
   flights,
@@ -11,16 +13,23 @@ function FlightResult({
   fetchAllData,
   openModal,
   hideAddButton,
+  draggedItem,
+  handleDragEnd,
+  crewMembers,
 }: {
   flights: CrewFlight[];
+
   hideDelete: boolean;
-  fetchAllData: () => void;
-  openModal: () => void;
+  fetchAllData?: () => void;
+  openModal?: () => void;
   hideAddButton: Boolean;
+  draggedItem?: CrewMember;
+  handleDragEnd?: ({}: DragEndEvent) => void;
+  crewMembers?: CrewMember[];
 }) {
   async function handleDeleteFlight(flightId: number) {
     await deleteFlight(flightId);
-    fetchAllData();
+    if (fetchAllData) fetchAllData();
   }
 
   async function handleDeleteCrewMember(
@@ -28,7 +37,7 @@ function FlightResult({
     flightId: number
   ) {
     await unassignCrewMember(crewMemberId, flightId);
-    fetchAllData();
+    if (fetchAllData) fetchAllData();
   }
 
   return (
@@ -36,6 +45,13 @@ function FlightResult({
       <div className="m-2">
         {!hideAddButton && (
           <div className="flex w-full justify-end pr-4">
+            <div className="mx-6">
+              <RandomAssignment
+                flights={flights}
+                fetchData={fetchAllData}
+                crewMembers={crewMembers}
+              />
+            </div>
             <button
               onClick={openModal}
               className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
@@ -49,6 +65,19 @@ function FlightResult({
           {flights.map((flight: CrewFlight) => (
             <li
               key={flight.flightId}
+              onDragOver={(e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = "copy";
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                if (draggedItem && handleDragEnd) {
+                  handleDragEnd({
+                    active: { id: draggedItem.id },
+                    over: { id: flight.flightId },
+                  } as DragEndEvent);
+                }
+              }}
               className="px-4 py-4 sm:px-6 m-4 shadow-lg border border-slate-200 rounded bg-white"
             >
               <div className="flex items-center justify-between">
@@ -68,7 +97,7 @@ function FlightResult({
                     </div>
                   </div>
                   <p className="mt-1 text-lg">
-                    <span className="font-semibold">Departure: </span>
+                    <span className="font-semibold">Departure </span>
                     <span className="text-blue-500 text-base">
                       {format(new Date(flight.departureTime), "PPpp")}
                     </span>
@@ -77,7 +106,7 @@ function FlightResult({
               </div>
               <div className="mt-4">
                 <h5 className="text-sm font-medium text-gray-700">
-                  Crew Members:
+                  Crew Members
                 </h5>
                 <ul className="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-3">
                   {flight.crewMembers.map((crewMember: CrewMember) => (

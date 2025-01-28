@@ -183,3 +183,25 @@ export async function unassignCrewMember(crewId: number, flightId: number) {
     throw new Error("Unable to unassign a crew member.");
   }
 }
+
+export async function assignCrewMember(crewId: number, flightId: number) {
+  console.log(crewId, flightId);
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_BACKEND_URL}/crew-assignment`,
+      {
+        crewId,
+        flightId,
+      }
+    );
+    if (response.status === 201) {
+      console.log(response.data.message);
+    } else {
+      console.error(`Failed to assign a crew member`);
+      throw new Error("Failed to assign a crew member.");
+    }
+  } catch (error) {
+    console.error("Error while assigning a crew member:", error);
+    throw new Error("Unable to assign a crew member.");
+  }
+}
