@@ -44,16 +44,20 @@ app.get("/crew-member", async (req, res) => {
 
     const flightsWithCrewResult = await turso.execute(
       `SELECT 
-          flights.id AS flight_id,
-          flights.flight_number,
-          flights.departure_time,
-          crew_members.id AS crew_member_id,
-          crew_members.name AS crew_member_name,
-          crew_members.role AS crew_member_role
+        flights.id AS flight_id,
+        flights.flight_number,
+        flights.departure_time,
+        crew_members.id AS crew_member_id,
+        crew_members.name AS crew_member_name,
+        crew_members.role AS crew_member_role
         FROM flights
-        JOIN flight_crew ON flights.id = flight_crew.flight_id
-        JOIN crew_members ON crew_members.id = flight_crew.crew_member_id
-        WHERE flight_crew.crew_member_id = ?`,
+        LEFT JOIN flight_crew ON flights.id = flight_crew.flight_id
+        LEFT JOIN crew_members ON crew_members.id = flight_crew.crew_member_id
+        WHERE flights.id IN (
+          SELECT flight_id 
+          FROM flight_crew 
+          WHERE crew_member_id = ?
+        )`,
       [foundCrewMemberId]
     );
 
