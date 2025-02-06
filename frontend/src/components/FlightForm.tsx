@@ -61,8 +61,7 @@ export const FlightForm = ({
         <div className="flex justify-end space-x-3">
           <button
             type="button"
-            onClick={async () => {
-              fetchData();
+            onClick={() => {
               closeFlightModal();
               setFlightNumber("");
               setDepartureTime("");

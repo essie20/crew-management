@@ -116,10 +116,10 @@ function FlightResult({
                     >
                       <div className="space-x-3">
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize bg-blue-100 text-blue-800 border border-blue-300">
-                          {crewMember.role.replace("_", " ")}
+                          {crewMember.role}
                         </span>
                         <span className="text-slate-900">
-                          {crewMember.name}{" "}
+                          {crewMember.name}
                         </span>
                       </div>
                       <div className="ml-2">

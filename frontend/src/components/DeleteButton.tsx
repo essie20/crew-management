@@ -6,7 +6,7 @@ export const DeleteButton = ({
   onDeleteClick: () => void;
 }) => {
   return (
-    <div className="">
+    <div>
       <button
         onClick={onDeleteClick}
         className="text-gray-600 hover:text-red-600 flex item-center"

@@ -21,7 +21,6 @@ export const CrewMemberForm = ({
           await createCrewMember(name, role);
           closeCrewModal();
           fetchData();
-          //massage is shown that it is created to users
         }}
         className="mb-6 space-y-4"
       >
@@ -55,7 +54,6 @@ export const CrewMemberForm = ({
           <button
             type="button"
             onClick={async () => {
-              fetchData();
               closeCrewModal();
               setName("");
               setRole("");

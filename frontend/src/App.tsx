@@ -52,7 +52,6 @@ function App() {
               </Routes>
             </main>
           </div>
-          {/* <Toaster position="top-right" /> */}
         </Router>
       </div>
     </>

@@ -109,7 +109,6 @@ app.get("/flights-with-crew", async (req, res) => {
         LEFT JOIN crew_members ON crew_members.id = flight_crew.crew_member_id
       `
     );
-    console.log(flightsWithCrewResult);
     const transformedData = flightsWithCrewResult.rows.reduce(
       (acc, current) => {
         let flight = acc.find(

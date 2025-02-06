@@ -12,7 +12,7 @@ import { Modal } from "../components/Modal.tsx";
 import { FlightForm } from "../components/FlightForm.tsx";
 import { CrewMemberForm } from "../components/CrewMemberForm.tsx";
 
-import { DndContext, DragEndEvent, DragOverlay } from "@dnd-kit/core";
+import { DndContext, DragEndEvent } from "@dnd-kit/core";
 
 function ManagerPage() {
   const [flights, setFlights] = useState<CrewFlight[]>([]);
@@ -53,20 +53,14 @@ function ManagerPage() {
   return (
     <div>
       <div className="flex w-full justify-end"></div>
-      <DndContext onDragEnd={handleDragEnd}>
-        <Modal isOpen={isFlightModalOpen}>
-          <FlightForm
-            closeFlightModal={closeFlightModal}
-            fetchData={fetchData}
-          />
-        </Modal>
-        <Modal isOpen={isCrewModalOpen}>
-          <CrewMemberForm
-            closeCrewModal={closeCrewModal}
-            fetchData={fetchData}
-          />
-        </Modal>
+      <Modal isOpen={isFlightModalOpen}>
+        <FlightForm closeFlightModal={closeFlightModal} fetchData={fetchData} />
+      </Modal>
+      <Modal isOpen={isCrewModalOpen}>
+        <CrewMemberForm closeCrewModal={closeCrewModal} fetchData={fetchData} />
+      </Modal>
 
+      <DndContext onDragEnd={handleDragEnd}>
         <div className="grid grid-cols-4">
           <div className="col-span-3">
             <FlightResult
@@ -91,13 +85,6 @@ function ManagerPage() {
             />
           </div>
         </div>
-        <DragOverlay>
-          {draggedItem ? (
-            <div className="p-4 bg-blue-500 text-white rounded">
-              {draggedItem.name} ({draggedItem.role})
-            </div>
-          ) : null}
-        </DragOverlay>
       </DndContext>
     </div>
   );

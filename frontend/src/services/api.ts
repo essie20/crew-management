@@ -63,7 +63,6 @@ export async function getAllFlightsWithCrew(): Promise<CrewFlight[]> {
       `${import.meta.env.VITE_BACKEND_URL}/flights-with-crew`
     );
     if (response.status === 200) {
-      console.log(response.data);
       return response.data as CrewFlight[];
     } else {
       console.error(`Failed to fetch flights with crew`);
@@ -185,7 +184,6 @@ export async function unassignCrewMember(crewId: number, flightId: number) {
 }
 
 export async function assignCrewMember(crewId: number, flightId: number) {
-  console.log(crewId, flightId);
   try {
     const response = await axios.post(
       `${import.meta.env.VITE_BACKEND_URL}/crew-assignment`,
@@ -194,6 +192,7 @@ export async function assignCrewMember(crewId: number, flightId: number) {
         flightId,
       }
     );
+
     if (response.status === 201) {
       console.log(response.data.message);
     } else {
