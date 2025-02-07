@@ -15,6 +15,8 @@ import { CrewMemberForm } from "../components/CrewMemberForm.tsx";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 
 import { LoaderCircle } from "lucide-react";
+import { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 function ManagerPage() {
   const [flights, setFlights] = useState<CrewFlight[]>([]);
@@ -44,10 +46,10 @@ function ManagerPage() {
 
     await assignCrewMember(crewMemberId, targetId);
     fetchData();
+    toast.success("Assigned successfully!");
   };
 
   async function fetchData() {
-    setLoading(true);
     setFlights(await getAllFlightsWithCrew());
     setCrewMembers(await getAllCrewMembers());
     setLoading(false);
@@ -58,7 +60,7 @@ function ManagerPage() {
 
   return (
     <div>
-      <div className="flex w-full justify-end"></div>
+      <Toaster position="top-right" />
       <Modal isOpen={isFlightModalOpen}>
         <FlightForm closeFlightModal={closeFlightModal} fetchData={fetchData} />
       </Modal>

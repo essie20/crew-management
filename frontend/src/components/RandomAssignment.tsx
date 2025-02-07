@@ -2,6 +2,7 @@ import { CrewFlight } from "../types/CrewFlight.ts";
 import { CrewMember } from "../types/CrewMember.ts";
 import { assignCrewMember } from "../services/api";
 import { Shuffle } from "lucide-react";
+import toast from "react-hot-toast";
 
 function RandomAssignment({
   flights,
@@ -101,6 +102,7 @@ function RandomAssignment({
         type="button"
         onClick={async () => {
           AssignCrewRandomly();
+          toast.success("Assigned successfully!");
         }}
         className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-700"
       >

@@ -1,6 +1,7 @@
 import { createCrewMember } from "../services/api";
 import { useState } from "react";
 import DropdownInput from "../components/DropdownInput";
+import toast from "react-hot-toast";
 
 export const CrewMemberForm = ({
   closeCrewModal,
@@ -20,6 +21,7 @@ export const CrewMemberForm = ({
           event.preventDefault();
           await createCrewMember(name, role);
           closeCrewModal();
+          toast.success("Added successfully!");
           fetchData();
         }}
         className="mb-6 space-y-4"

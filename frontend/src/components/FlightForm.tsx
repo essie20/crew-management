@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import { createFlight } from "../services/api";
 import { useState } from "react";
 
@@ -19,8 +20,7 @@ export const FlightForm = ({
           await createFlight(flightNumber, departureTime);
           closeFlightModal();
           fetchData();
-
-          //massage is shown that it is created to users
+          toast.success("Added successfully!");
         }}
         className="mb-6 space-y-4"
       >
