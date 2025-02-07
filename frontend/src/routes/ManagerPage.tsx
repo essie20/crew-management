@@ -47,14 +47,13 @@ function ManagerPage() {
   };
 
   async function fetchData() {
+    setLoading(true);
     setFlights(await getAllFlightsWithCrew());
     setCrewMembers(await getAllCrewMembers());
+    setLoading(false);
   }
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-      fetchData();
-    });
+    fetchData();
   }, []);
 
   return (
