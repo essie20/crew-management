@@ -14,6 +14,8 @@ import { CrewMemberForm } from "../components/CrewMemberForm.tsx";
 
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 
+import { LoaderCircle } from "lucide-react";
+
 function ManagerPage() {
   const [flights, setFlights] = useState<CrewFlight[]>([]);
   const [crewMembers, setCrewMembers] = useState<CrewMember[]>([]);
@@ -26,6 +28,8 @@ function ManagerPage() {
   const closeCrewModal = () => setIsCrewModalOpen(false);
 
   const [draggedItem, setDraggedItem] = useState<CrewMember>();
+
+  const [loading, setLoading] = useState(true);
 
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
@@ -47,7 +51,10 @@ function ManagerPage() {
     setCrewMembers(await getAllCrewMembers());
   }
   useEffect(() => {
-    fetchData();
+    setTimeout(() => {
+      setLoading(false);
+      fetchData();
+    });
   }, []);
 
   return (
@@ -60,32 +67,41 @@ function ManagerPage() {
         <CrewMemberForm closeCrewModal={closeCrewModal} fetchData={fetchData} />
       </Modal>
 
-      <DndContext onDragEnd={handleDragEnd}>
-        <div className="grid grid-cols-4">
-          <div className="col-span-3">
-            <FlightResult
-              flights={flights}
-              crewMembers={crewMembers}
-              hideDelete={false}
-              fetchAllData={fetchData}
-              openModal={openFlightModal}
-              hideAddButton={false}
-              draggedItem={draggedItem}
-              handleDragEnd={handleDragEnd}
-            />
+      {loading ? (
+        <div className="flex flex-col items-center justify-center h-screen">
+          <div className="flex items-center justify-center">
+            <LoaderCircle className="animate-spin" />
           </div>
-          <div className="m-10">
-            <CrewMemberList
-              crewMembers={crewMembers}
-              hideDelete={false}
-              fetchAllData={fetchData}
-              openModal={openCrewModal}
-              onDragStart={setDraggedItem}
-              onDragEnd={setDraggedItem}
-            />
-          </div>
+          <p className="text-center mt-4">Loading...</p>
         </div>
-      </DndContext>
+      ) : (
+        <DndContext onDragEnd={handleDragEnd}>
+          <div className="grid grid-cols-4">
+            <div className="col-span-3">
+              <FlightResult
+                flights={flights}
+                crewMembers={crewMembers}
+                hideDelete={false}
+                fetchAllData={fetchData}
+                openModal={openFlightModal}
+                hideAddButton={false}
+                draggedItem={draggedItem}
+                handleDragEnd={handleDragEnd}
+              />
+            </div>
+            <div className="m-10">
+              <CrewMemberList
+                crewMembers={crewMembers}
+                hideDelete={false}
+                fetchAllData={fetchData}
+                openModal={openCrewModal}
+                onDragStart={setDraggedItem}
+                onDragEnd={setDraggedItem}
+              />
+            </div>
+          </div>
+        </DndContext>
+      )}
     </div>
   );
 }
