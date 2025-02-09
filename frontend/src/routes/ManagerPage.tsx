@@ -4,8 +4,10 @@ import {
   getAllCrewMembers,
   assignCrewMember,
 } from "../services/api";
+
 import { CrewFlight } from "../types/CrewFlight.ts";
 import { CrewMember } from "../types/CrewMember.ts";
+
 import FlightResult from "../components/FlightResult.tsx";
 import CrewMemberList from "../components/CrewMemberList.tsx";
 import { Modal } from "../components/Modal.tsx";
@@ -21,6 +23,16 @@ import toast from "react-hot-toast";
 function ManagerPage() {
   const [flights, setFlights] = useState<CrewFlight[]>([]);
   const [crewMembers, setCrewMembers] = useState<CrewMember[]>([]);
+
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  const [flightId, setFlightId] = useState<number>(0);
+  const [editedFlightNum, setEditedFlightNum] = useState("");
+  const [editedFlightTime, setEditedFlightTime] = useState("");
+
+  const [cmId, setCmId] = useState<number>(0);
+  const [editedCmName, setEditedCmName] = useState("");
+  const [editedCmRole, setEditedCmRole] = useState("");
 
   const [isFlightModalOpen, setIsFlightModalOpen] = useState(false);
   const openFlightModal = () => setIsFlightModalOpen(true);
@@ -62,10 +74,24 @@ function ManagerPage() {
     <div>
       <Toaster position="top-right" />
       <Modal isOpen={isFlightModalOpen}>
-        <FlightForm closeFlightModal={closeFlightModal} fetchData={fetchData} />
+        <FlightForm
+          closeFlightModal={closeFlightModal}
+          fetchData={fetchData}
+          flightId={flightId}
+          editedFlightNum={editedFlightNum}
+          editedFlightTime={editedFlightTime}
+          isEditMode={isEditMode}
+        />
       </Modal>
       <Modal isOpen={isCrewModalOpen}>
-        <CrewMemberForm closeCrewModal={closeCrewModal} fetchData={fetchData} />
+        <CrewMemberForm
+          closeCrewModal={closeCrewModal}
+          fetchData={fetchData}
+          cmId={cmId}
+          editedCmName={editedCmName}
+          editedCmRole={editedCmRole}
+          isEditMode={isEditMode}
+        />
       </Modal>
 
       {loading ? (
@@ -88,6 +114,10 @@ function ManagerPage() {
                 hideAddButton={false}
                 draggedItem={draggedItem}
                 handleDragEnd={handleDragEnd}
+                setFlightId={setFlightId}
+                setEditedFlightNum={setEditedFlightNum}
+                setEditedFlightTime={setEditedFlightTime}
+                setIsEditMode={setIsEditMode}
               />
             </div>
             <div className="m-10">
@@ -98,6 +128,10 @@ function ManagerPage() {
                 openModal={openCrewModal}
                 onDragStart={setDraggedItem}
                 onDragEnd={setDraggedItem}
+                setCmId={setCmId}
+                setEditedCmName={setEditedCmName}
+                setEditedCmRole={setEditedCmRole}
+                setIsEditMode={setIsEditMode}
               />
             </div>
           </div>

@@ -1,27 +1,50 @@
-import { createCrewMember } from "../services/api";
-import { useState } from "react";
+import { createCrewMember, updateCrewMember } from "../services/api";
+import { useState, useEffect } from "react";
 import DropdownInput from "../components/DropdownInput";
 import toast from "react-hot-toast";
 
 export const CrewMemberForm = ({
   closeCrewModal,
   fetchData,
+  cmId,
+  editedCmName,
+  editedCmRole,
+  isEditMode,
 }: {
   closeCrewModal: () => void;
   fetchData: () => void;
+  cmId: number;
+  editedCmName: string;
+  editedCmRole: string;
+  isEditMode: boolean;
 }) => {
   const [name, setName] = useState("");
   const [role, setRole] = useState("Captain");
   const roles = ["Captain", "First Officer", "Flight Attendant"];
+
+  useEffect(() => {
+    if (isEditMode) {
+      setName(editedCmName);
+      setRole(editedCmRole);
+    } else {
+      setName("");
+      setRole("Captain");
+    }
+  }, [isEditMode, editedCmName, editedCmRole]);
 
   return (
     <div>
       <form
         onSubmit={async (event) => {
           event.preventDefault();
-          await createCrewMember(name, role);
+          if (isEditMode) {
+            await updateCrewMember(cmId, name, role);
+            toast.success("Updated successfully!");
+          } else {
+            await createCrewMember(name, role);
+            toast.success("Added successfully!");
+          }
           closeCrewModal();
-          toast.success("Added successfully!");
           fetchData();
         }}
         className="mb-6 space-y-4"

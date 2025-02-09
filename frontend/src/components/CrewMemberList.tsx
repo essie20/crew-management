@@ -1,7 +1,7 @@
 import { CrewMember } from "../types/CrewMember.ts";
 import { DeleteButton } from "./DeleteButton.tsx";
 import { deleteCrewMember } from "../services/api.ts";
-import { User } from "lucide-react";
+import { User, Pencil } from "lucide-react";
 
 function CrewMemberList({
   crewMembers,
@@ -10,6 +10,10 @@ function CrewMemberList({
   openModal,
   onDragStart,
   onDragEnd,
+  setCmId,
+  setEditedCmName,
+  setEditedCmRole,
+  setIsEditMode,
 }: {
   crewMembers: CrewMember[];
   hideDelete: boolean;
@@ -17,6 +21,10 @@ function CrewMemberList({
   openModal: () => void;
   onDragStart: (cm: CrewMember) => void;
   onDragEnd: (cm?: CrewMember) => void;
+  setCmId: (cmId: number) => void;
+  setEditedCmName: (cmName: string) => void;
+  setEditedCmRole: (cmRole: string) => void;
+  setIsEditMode?: (isEdit: boolean) => void;
 }) {
   async function handleDeleteCrewMember(id: number) {
     await deleteCrewMember(id);
@@ -40,7 +48,26 @@ function CrewMemberList({
               <span className="text-slate-900 ml-3">{crewMember.name} </span>
             </span>
 
-            <div className="ml-2">
+            <div className="ml-2 inline-flex">
+              <button
+                onClick={() => {
+                  if (
+                    setIsEditMode &&
+                    openModal &&
+                    setCmId &&
+                    setEditedCmName &&
+                    setEditedCmRole
+                  ) {
+                    setIsEditMode(true);
+                    openModal();
+                    setCmId(crewMember.id);
+                    setEditedCmName(crewMember.name);
+                    setEditedCmRole(crewMember.role);
+                  }
+                }}
+              >
+                <Pencil className="mr-2 text-gray-600 hover:text-blue-600 flex item-center" />
+              </button>
               {!hideDelete && (
                 <DeleteButton
                   onDeleteClick={() => handleDeleteCrewMember(crewMember.id)}

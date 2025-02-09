@@ -1,26 +1,49 @@
 import toast from "react-hot-toast";
-import { createFlight } from "../services/api";
-import { useState } from "react";
+import { createFlight, updateFlight } from "../services/api";
+import { useState, useEffect } from "react";
 
 export const FlightForm = ({
   closeFlightModal,
   fetchData,
+  flightId,
+  editedFlightNum,
+  editedFlightTime,
+  isEditMode,
 }: {
   closeFlightModal: () => void;
   fetchData: () => void;
+  flightId: number;
+  editedFlightNum: string;
+  editedFlightTime: string;
+  isEditMode: boolean;
 }) => {
   const [flightNumber, setFlightNumber] = useState("");
   const [departureTime, setDepartureTime] = useState("");
+
+  useEffect(() => {
+    if (isEditMode) {
+      setFlightNumber(editedFlightNum);
+      setDepartureTime(editedFlightTime);
+    } else {
+      setFlightNumber("");
+      setDepartureTime("");
+    }
+  }, [isEditMode, editedFlightNum, editedFlightTime]);
 
   return (
     <div>
       <form
         onSubmit={async (event) => {
           event.preventDefault();
-          await createFlight(flightNumber, departureTime);
+          if (isEditMode) {
+            await updateFlight(flightId, flightNumber, departureTime);
+            toast.success("Updated successfully!");
+          } else {
+            await createFlight(flightNumber, departureTime);
+            toast.success("Added successfully!");
+          }
           closeFlightModal();
           fetchData();
-          toast.success("Added successfully!");
         }}
         className="mb-6 space-y-4"
       >

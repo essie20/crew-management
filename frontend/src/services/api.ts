@@ -204,3 +204,49 @@ export async function assignCrewMember(crewId: number, flightId: number) {
     throw new Error("Unable to assign a crew member.");
   }
 }
+
+export async function updateFlight(
+  flightId: number,
+  flightNo: string,
+  departureTime: string
+) {
+  try {
+    const response = await axios.put(
+      `${import.meta.env.VITE_BACKEND_URL}/flight`,
+      { flightNo, departureTime },
+      { params: { flightId } }
+    );
+    if (response.status === 200) {
+      console.log(response.data.message);
+    } else {
+      console.error(`Failed to update a flight`);
+      throw new Error("Failed to update a flight.");
+    }
+  } catch (error) {
+    console.error("Error while updating a flight:", error);
+    throw new Error("Unable to update a flight.");
+  }
+}
+
+export async function updateCrewMember(
+  crewId: number,
+  name: string,
+  role: string
+) {
+  try {
+    const response = await axios.put(
+      `${import.meta.env.VITE_BACKEND_URL}/crew-member`,
+      { name, role },
+      { params: { crewId } }
+    );
+    if (response.status === 200) {
+      console.log(response.data.message);
+    } else {
+      console.error(`Failed to update a crew member`);
+      throw new Error("Failed to update a crew member.");
+    }
+  } catch (error) {
+    console.error("Error while updating a crew member:", error);
+    throw new Error("Unable to update a crew member.");
+  }
+}

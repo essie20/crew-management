@@ -3,7 +3,7 @@ import { CrewMember } from "../types/CrewMember.ts";
 import { format } from "date-fns";
 import { DeleteButton } from "./DeleteButton.tsx";
 import { deleteFlight, unassignCrewMember } from "../services/api.ts";
-import { Plane } from "lucide-react";
+import { Plane, Pencil } from "lucide-react";
 import { DragEndEvent } from "@dnd-kit/core";
 import RandomAssignment from "../components/RandomAssignment.tsx";
 
@@ -16,9 +16,12 @@ function FlightResult({
   draggedItem,
   handleDragEnd,
   crewMembers,
+  setFlightId,
+  setEditedFlightNum,
+  setEditedFlightTime,
+  setIsEditMode,
 }: {
   flights: CrewFlight[];
-
   hideDelete: boolean;
   fetchAllData?: () => void;
   openModal?: () => void;
@@ -26,6 +29,10 @@ function FlightResult({
   draggedItem?: CrewMember;
   handleDragEnd?: ({}: DragEndEvent) => void;
   crewMembers?: CrewMember[];
+  setFlightId?: (flightId: number) => void;
+  setEditedFlightNum?: (flightNum: string) => void;
+  setEditedFlightTime?: (flightTime: string) => void;
+  setIsEditMode?: (isEdit: boolean) => void;
 }) {
   async function handleDeleteFlight(flightId: number) {
     await deleteFlight(flightId);
@@ -87,6 +94,26 @@ function FlightResult({
                       Flight {flight.flightNo}
                     </h4>
                     <div className="flex justify-end w-full">
+                      <button
+                        onClick={() => {
+                          if (
+                            setIsEditMode &&
+                            openModal &&
+                            setFlightId &&
+                            setEditedFlightNum &&
+                            setEditedFlightTime
+                          ) {
+                            setIsEditMode(true);
+                            openModal();
+                            setFlightId(flight.flightId);
+                            setEditedFlightNum(flight.flightNo);
+                            setEditedFlightTime(flight.departureTime);
+                          }
+                        }}
+                      >
+                        <Pencil className="mr-2 text-gray-600 hover:text-blue-600 flex item-center" />
+                      </button>
+
                       {!hideDelete && (
                         <DeleteButton
                           onDeleteClick={() =>
