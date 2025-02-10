@@ -36,10 +36,17 @@ function ManagerPage() {
 
   const [isFlightModalOpen, setIsFlightModalOpen] = useState(false);
   const openFlightModal = () => setIsFlightModalOpen(true);
-  const closeFlightModal = () => setIsFlightModalOpen(false);
+  const closeFlightModal = () => {
+    setIsFlightModalOpen(false);
+    setIsEditMode(false);
+  };
+
   const [isCrewModalOpen, setIsCrewModalOpen] = useState(false);
   const openCrewModal = () => setIsCrewModalOpen(true);
-  const closeCrewModal = () => setIsCrewModalOpen(false);
+  const closeCrewModal = () => {
+    setIsCrewModalOpen(false);
+    setIsEditMode(false);
+  };
 
   const [draggedItem, setDraggedItem] = useState<CrewMember>();
 
